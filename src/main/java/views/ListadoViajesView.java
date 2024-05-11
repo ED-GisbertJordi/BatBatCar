@@ -5,6 +5,8 @@ package views;
  * ruta, precio, propietario, tipo de viaje, plazas disponibles y si está
  * cancelado.
  */
+import java.util.Iterator;
+
 import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 import entidades.Viaje;
@@ -48,10 +50,21 @@ public class ListadoViajesView {
     private void generarFilasViajes(AsciiTable tabla) {
 
         // Implementa este método usando un bucle que itere sobre la lista de viajes y mostrando uno por fila.
+        //                      codigo       sepadador          ruta                           precio                  propietario                 tipo                plazas dispo    cancelado
+        Iterator i = viajes.iterator();
+        while (i.hasNext()) {
+            Viaje next =  (Viaje) i.next();
+            
+            tabla.addRow(next.getCodigo(), null, next.getRuta(), next.getPrecio(), next.getPropietario(), next.getTipo(), next.getPlazasDisonibles(), (next.getCancelado()? "Si" : "No"));
+
+        }
+        /*
         tabla.addRow(1, null, "Barcelona-Alicante", 45, "roberto1979", "Estándar", 3, "No");
         tabla.addRule();
         tabla.addRow(2, null, "Alcoy-Elche", 10, "sergio123", "Estándar", 5, "Sí");
+        */
         tabla.addRule();
+        GestorIO.print("\n");
     }
 
 }

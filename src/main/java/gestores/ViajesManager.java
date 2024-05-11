@@ -30,16 +30,16 @@ public class ViajesManager {
      * Añade un nuevo viaje al repositorio
      * @param viaje
      */
-    public void add(Viaje viaje) {
-        viajes.add(viaje);
+    public boolean add(Viaje viaje) {
+        return viajes.add(viaje);
     }
     
     /**
      * Cancela un viaje
      * @param viaje
      */
-    public void cancel(Viaje viaje){
-        throw new UnsupportedOperationException("Por implementar");
+    public boolean cancel(Viaje viaje){
+        return viajes.remove(viaje);
     }
 
     /**
@@ -61,10 +61,11 @@ public class ViajesManager {
     private void init() {
         // añade a la colección "viajes" todos los viajes que creas necesario tener de inicio en tu sistema
         // this.add(new Viaje(....));
-        this.add(new Viaje(new Usuario("Jordi", "1234"), "Random", 30, 110, 5));
-        this.add(new ViajeCancelable(new Usuario("Jordi", "1234"), "Tex", 60, 30, 10));
-        this.add(new ViajeFlexible(new Usuario("Jordi", "1234"), "Batoi", 90, 80, 15));
-        this.add(new ViajeExclusivo(new Usuario("Jordi", "1234"), "Raro", 90, 5, 5));
+        this.add(new Viaje(new Usuario("Jordi", "1234"), "Random", 30, 110, 110, 5));
+        this.add(new ViajeCancelable(new Usuario("Jordi", "1234"), "Tex", 60, 30, 30, 10));
+        this.add(new ViajeFlexible(new Usuario("Jordi", "1234"), "Batoi", 90, 80, 200, 15));
+        this.add(new ViajeFlexible(new Usuario("Anon", "1234"), "Batoi", 90, 80, 200, 15));
+        this.add(new ViajeExclusivo(new Usuario("Jordi", "1234"), "Raro", 90, 5, 1, 5));
         
         
     }

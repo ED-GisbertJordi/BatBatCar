@@ -17,18 +17,18 @@ public class UsuariosController {
     
     
 
-    public boolean log() {
+    public Usuario log() {
         final int INTENTOS = 3;
         for (int i = 0; i < INTENTOS; i++) {
             String name = GestorIO.getString("UserName");
             String pass = GestorIO.getString("Passeord");
             Usuario user = new Usuario(name, pass);
             if (gestor.existente(user)) {
-                return true;
+                return user;
             }
         }
         GestorIO.print("Se ha alcanzado el número máximo de intentos. ");
-        return false;
+        return null;
     }
 
 }

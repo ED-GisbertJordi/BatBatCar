@@ -8,8 +8,8 @@ import entidades.Viaje;
  */
 public class ViajeExclusivo extends Viaje{
 
-    public ViajeExclusivo(Usuario propietario, String ruta, int duracion, int plazasTotales, double precio) {
-        super(propietario, ruta, duracion, plazasTotales, precio);
+    public ViajeExclusivo(Usuario propietario, String ruta, int duracion, int plazasTotales, int plazasOfertadas, double precio) {
+        super(propietario, ruta, duracion, plazasTotales, plazasOfertadas, precio);
     }
     
     
@@ -18,6 +18,11 @@ public class ViajeExclusivo extends Viaje{
     public void hacerReserva(Usuario usuario, int plazas) {
         super.hacerReserva(usuario, plazas);
         super.setCerrado(true);
+    }
+    
+    @Override
+    public String getTipo(){
+        return "Exclusivo";
     }
     
 }

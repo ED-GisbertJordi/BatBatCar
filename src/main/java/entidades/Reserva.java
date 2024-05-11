@@ -3,11 +3,10 @@ package entidades;
 import java.util.HashSet;
 import java.util.Random;
 
-import entidades.tiposViajes.ViajeFlexible;
 
 public class Reserva {
     private int codigo;
-    private HashSet<Integer> codigos = new HashSet<>();
+    private static HashSet<Integer> codigos = new HashSet<>();
     private Usuario usuario;
     private int plazas;
     private Viaje viaje;
@@ -39,6 +38,10 @@ public class Reserva {
     
     public Usuario getUsuario(){
         return usuario;
+    }
+    
+    public int getPlazas(){
+        return plazas;
     }
     
     @Override

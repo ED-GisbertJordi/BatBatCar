@@ -17,7 +17,11 @@ public class Usuario {
     public boolean equals(Object usuario) {
         Usuario user = (Usuario) usuario;
         return user.nombre.equals(this.nombre) && user.contraseña.equals(this.contraseña);
-        
+    }
+    
+    @Override
+    public String toString() {
+        return nombre;
     }
     
 }

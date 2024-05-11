@@ -7,8 +7,8 @@ import entidades.Viaje;
  */
 public class ViajeCancelable extends Viaje{
     
-    public ViajeCancelable(Usuario propietario, String ruta, int duracion, int plazasTotales, double precio) {
-        super(propietario, ruta, duracion, plazasTotales, precio);
+    public ViajeCancelable(Usuario propietario, String ruta, int duracion, int plazasTotales, int plazasOfertadas, double precio) {
+        super(propietario, ruta, duracion, plazasTotales, plazasOfertadas, precio);
     }
     
     @Override
@@ -16,4 +16,8 @@ public class ViajeCancelable extends Viaje{
         super.cancelarReserva(codigo);
     }
     
+    @Override
+    public String getTipo(){
+        return "Cancelable";
+    }
 }

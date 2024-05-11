@@ -9,8 +9,8 @@ import entidades.Viaje;
  */
 public class ViajeFlexible extends Viaje{
 
-    public ViajeFlexible(Usuario propietario, String ruta, int duracion, int plazasTotales, double precio) {
-        super(propietario, ruta, duracion, plazasTotales, precio);
+    public ViajeFlexible(Usuario propietario, String ruta, int duracion, int plazasTotales, int plazasOfertadas, double precio) {
+        super(propietario, ruta, duracion, plazasTotales, plazasOfertadas, precio);
     }
     
     public void cancelar(){
@@ -24,5 +24,9 @@ public class ViajeFlexible extends Viaje{
     
     public void cambiarPrecio(double precio){
         super.setPrecio(precio);
+    }
+    
+    public String getTipo(){
+        return "Flexible";
     }
 }
