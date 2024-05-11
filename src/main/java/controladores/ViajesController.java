@@ -12,6 +12,7 @@ import views.ListadoViajesView;
 import java.util.List;
 
 import entidades.tiposViajes.*;
+import views.TicketView;
 
 public class ViajesController {
 
@@ -103,9 +104,24 @@ public class ViajesController {
     }
     
     public void hacerReserva(int codigo){
-        List viajes = getViajesReservables();
+        final int NUM_PLAZA_MIN = 1;
+        List<Viaje> viajes = getViajesReservables();
+        Viaje v = null;
+        for (Viaje viaje : viajes) {
+            if (codigo==viaje.getCodigo()) {
+                v = viaje;
+                break;
+            }
+        }
+        if (v!=null) {
+            int plazas = GestorIO.getInt("Introduzaca el numero de plazas a reserva", NUM_PLAZA_MIN, v.getOfertadas());
+            v.hacerReserva(usuario, plazas);
+            GestorIO.print("Reserva realizada con éxito. A continuación se mostrará el ticket de confirmación.");
+            (new TicketView(usuario, codigo, plazas)).visualizar();
         
-        
+        }else{
+            GestorIO.print("El código no corresponde con un Viaje valido.");
+        }
     }
 
 }

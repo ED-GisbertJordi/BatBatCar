@@ -89,8 +89,8 @@ public class Viaje {
         return cancelado;
     }
 
-    public int getPlazasDisonibles() {
-        return plazasTotales - plazasOfertadas;
+    public int getOfertadas() {
+        return plazasOfertadas;
     }
 
     public String getTipo() {
@@ -98,16 +98,17 @@ public class Viaje {
     }
 
     public void hacerReserva(Usuario usuario, int plazas) {
-        if (plazasOfertadas >= plazas) {
+        if (plazasOfertadas >= plazas && !usuario.equals(this.propietario)) {
             reservas.add(new Reserva(usuario, this, plazas));
             plazasOfertadas = -plazas;
         }
     }
 
     protected void cambiarPlazasReserva(Reserva reserva, int plazas) {
-        if (!cerrado && this.getPlazasDisonibles() >= plazas) {
-            this.hacerReserva(reserva.getUsuario(), plazas);
+        if (!cerrado && this.getOfertadas() >= plazas) {
+            Usuario user = reserva.getUsuario();
             reservas.remove(reserva);
+            this.hacerReserva(user , plazas);
         }
     }
 

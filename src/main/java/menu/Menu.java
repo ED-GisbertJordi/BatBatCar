@@ -120,7 +120,8 @@ public class Menu {
             case OPCION_ADD_RESERVA -> {
                 if(iniciado){
                     viajesController.listarViajesReservables();
-                    viajesController.listarViajesReservables();
+                    int codigo = GestorIO.getInt("Introduce el código del viaje a seleccionar");
+                    viajesController.hacerReserva(codigo);
                     
                 }else{
                     inicie();

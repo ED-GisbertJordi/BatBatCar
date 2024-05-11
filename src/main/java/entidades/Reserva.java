@@ -12,7 +12,7 @@ public class Reserva {
     private Viaje viaje;
 
     public Reserva(Usuario usuario, Viaje viaje, int plazas) {
-        if (usuario.equals(viaje.getPropietario()) && !viaje.getCancelado() && !viaje.getCerrado() && viaje.getPlazasDisonibles() >= plazas) {
+        if (usuario.equals(viaje.getPropietario()) && !viaje.getCancelado() && !viaje.getCerrado() && viaje.getOfertadas() >= plazas) {
             ponerCodigo();
             this.usuario = usuario;
             this.plazas = plazas;

@@ -55,7 +55,7 @@ public class ListadoViajesView {
         while (i.hasNext()) {
             Viaje next =  (Viaje) i.next();
             
-            tabla.addRow(next.getCodigo(), null, next.getRuta(), next.getPrecio(), next.getPropietario(), next.getTipo(), next.getPlazasDisonibles(), (next.getCancelado()? "Si" : "No"));
+            tabla.addRow(next.getCodigo(), null, next.getRuta(), next.getPrecio(), next.getPropietario(), next.getTipo(), next.getOfertadas(), (next.getCancelado()? "Si" : "No"));
 
         }
         /*
