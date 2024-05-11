@@ -5,6 +5,11 @@ import entidades.Viaje;
 import java.util.ArrayList;
 import java.util.List;
 
+import entidades.Usuario;
+import entidades.tiposViajes.ViajeCancelable;
+import entidades.tiposViajes.ViajeExclusivo;
+import entidades.tiposViajes.ViajeFlexible;
+
 /**
  * Gestor de viajes. Manejará la lista de los viajes tanto para almancenar nueva 
  * información sobre ella como para recuperar la totalidad o parte de la información
@@ -26,7 +31,7 @@ public class ViajesManager {
      * @param viaje
      */
     public void add(Viaje viaje) {
-        throw new UnsupportedOperationException("Por implementar");
+        viajes.add(viaje);
     }
     
     /**
@@ -56,5 +61,11 @@ public class ViajesManager {
     private void init() {
         // añade a la colección "viajes" todos los viajes que creas necesario tener de inicio en tu sistema
         // this.add(new Viaje(....));
+        this.add(new Viaje(new Usuario("Jordi", "1234"), "Random", 30, 110, 5));
+        this.add(new ViajeCancelable(new Usuario("Jordi", "1234"), "Tex", 60, 30, 10));
+        this.add(new ViajeFlexible(new Usuario("Jordi", "1234"), "Batoi", 90, 80, 15));
+        this.add(new ViajeExclusivo(new Usuario("Jordi", "1234"), "Raro", 90, 5, 5));
+        
+        
     }
 }

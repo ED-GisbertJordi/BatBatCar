@@ -4,11 +4,13 @@ package entidades;
  * Clase que representa a un viaje estándar
  */
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Random;
 
 import entidades.Usuario;
 
 public class Viaje {
-
+    private HashSet<Integer> codigos = new HashSet<>();
     private int codigo;
     private Usuario propietario;
     private String ruta;
@@ -24,8 +26,8 @@ public class Viaje {
         this.codigo = 0;
     }
 
-    public Viaje(int codigo, Usuario propietario, String ruta, int duracion, int plazasTotales, double precio) {
-        this.codigo = codigo;
+    public Viaje(Usuario propietario, String ruta, int duracion, int plazasTotales, double precio) {
+        ponerCodigo();
         this.propietario = propietario;
         this.ruta = ruta;
         this.duracion = duracion;
@@ -85,6 +87,17 @@ public class Viaje {
 
     protected void cancelarReserva(int codigo) {
         reservas.remove(new Reserva(codigo));
+    }
+    
+    private void ponerCodigo(){
+        Random random = new Random();
+        boolean insertado;
+        int cod;
+        do{
+            cod = random.nextInt(0, Integer.MAX_VALUE);
+            insertado = codigos.add(cod);            
+        }while (!insertado);
+        codigo = cod;
     }
 
     @Override

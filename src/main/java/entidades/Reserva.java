@@ -7,7 +7,7 @@ import entidades.tiposViajes.ViajeFlexible;
 
 public class Reserva {
     private int codigo;
-    private static HashSet<Integer> codigos = new HashSet<>();
+    private HashSet<Integer> codigos = new HashSet<>();
     private Usuario usuario;
     private int plazas;
     private Viaje viaje;
