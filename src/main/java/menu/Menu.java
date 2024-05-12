@@ -119,18 +119,14 @@ public class Menu {
                     if (!reservasController.getReservasModificables().isEmpty()) {
                         int codigo = GestorIO.getInt("Introduce el código de la reserva a modificar");
                         if (reservasController.getReserva(codigo) != null) {
-
                             if (viajesController.getModificable(reservasController.getReserva(codigo).getViaje().getCodigo())) {
-                                reservasController.modReserva(reservasController.getReserva(codigo));
-
+                                reservasController.modificarReserva(reservasController.getReserva(codigo));
                             } else {
                                 GestorIO.print("Error: El viaje no permite Cambios en las reservas.");
                             }
                         } else {
                             GestorIO.print("El código no corresponde con un Viaje valido.");
-
                         }
-
                     }
                 } else {
                     inicie();
@@ -138,7 +134,19 @@ public class Menu {
             }
             case OPCION_CANCELAR_RESERVA -> {
                 if (iniciado) {
-                    viajesController.listarViajes();
+                    reservasController.listarReservasCancelables();
+                    if (!reservasController.getReservasCancelables().isEmpty()) {
+                        int codigo = GestorIO.getInt("Introduce el código de la reserva a modificar");
+                        if (reservasController.getReserva(codigo) != null) {
+                            if (viajesController.getCancelable(reservasController.getReserva(codigo).getViaje().getCodigo())) {
+                                reservasController.cancelarReserva(reservasController.getReserva(codigo));
+                            } else {
+                                GestorIO.print("Error: El viaje no permite Cambios en las reservas.");
+                            }
+                        } else {
+                            GestorIO.print("El código no corresponde con un Viaje valido.");
+                        }
+                    }
                 } else {
                     inicie();
                 }

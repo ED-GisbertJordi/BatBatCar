@@ -7,27 +7,38 @@ import entidades.Viaje;
 /**
  * @author Jordi Gisbert Ferriz
  */
-public class ViajeFlexible extends Viaje{
+public class ViajeFlexible extends Viaje {
 
     public ViajeFlexible(Usuario propietario, String ruta, int duracion, int plazasTotales, int plazasOfertadas, double precio) {
         super(propietario, ruta, duracion, plazasTotales, plazasOfertadas, precio);
     }
-    
-    public void cancelar(){
-        super.setCancelado(true);
+
+    @Override
+    public void cancelar() {
+        super.cancelar();
     }
-    
+
+    @Override
+    public void cancelarReserva(int codigo) {
+        super.cancelarReserva(codigo);
+    }
+
     @Override
     public Reserva cambiarPlazasReserva(Reserva reserva, int plazas) {
         return super.cambiarPlazasReserva(reserva, plazas);
     }
-    
-    public void cambiarPrecio(double precio){
+
+    public void cambiarPrecio(double precio) {
         super.setPrecio(precio);
     }
-    
+
     @Override
-    public String getTipo(){
+    public String getTipo() {
         return "Flexible";
+    }
+
+    @Override
+    public String toString() {
+        return "Viaje de tipo " + getTipo() + " del propietario " + getPropietario() + " con código " + getCodigo() + " y ruta " + getRuta() + "";
     }
 }

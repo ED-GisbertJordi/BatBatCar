@@ -137,4 +137,9 @@ public class ViajesController {
         return v != null && !v.getCerrado() && !v.getCancelado() && v instanceof ViajeFlexible;
     }
     
+    public boolean getCancelable(int codigo) {
+        Viaje v = getViaje(codigo);
+        return v != null && !v.getCerrado() && !v.getCancelado() && (v instanceof ViajeFlexible || v instanceof ViajeCancelable);
+    }
+    
 }
