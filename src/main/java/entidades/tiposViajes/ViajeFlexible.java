@@ -18,14 +18,15 @@ public class ViajeFlexible extends Viaje{
     }
     
     @Override
-    public void cambiarPlazasReserva(Reserva reserva, int plazas) {
-        super.cambiarPlazasReserva(reserva, plazas);
+    public Reserva cambiarPlazasReserva(Reserva reserva, int plazas) {
+        return super.cambiarPlazasReserva(reserva, plazas);
     }
     
     public void cambiarPrecio(double precio){
         super.setPrecio(precio);
     }
     
+    @Override
     public String getTipo(){
         return "Flexible";
     }

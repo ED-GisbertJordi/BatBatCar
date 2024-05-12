@@ -35,11 +35,11 @@ public class TicketView {
         view.addRule();
         view.addRow("*", "*");
         view.addRule();
-        view.addRow("Reserva con código "+codigo);
+        view.addRow(null, "Reserva con código "+String.valueOf(codigo));
         view.addRule();
-        view.addRow("Usuario", user);
+        view.addRow("Usuario", user.toString());
         view.addRule();
-        view.addRow("Plazas", plazas);
+        view.addRow("Plazas", String.valueOf(plazas));
         view.addRule();
         view.setTextAlignment(TextAlignment.CENTER);
         return view;
@@ -53,6 +53,4 @@ public class TicketView {
     public void visualizar() {
         System.out.println(buildASCIITable().render(ANCHO_TABLA));
     }
-
-
 }

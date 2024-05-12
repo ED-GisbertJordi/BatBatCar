@@ -65,6 +65,8 @@ public class ViajesManager {
         this.add(new ViajeCancelable(new Usuario("Jordi", "1234"), "Tex", 60, 30, 30, 10));
         this.add(new ViajeFlexible(new Usuario("Jordi", "1234"), "Batoi", 90, 80, 200, 15));
         this.add(new ViajeFlexible(new Usuario("Anon", "1234"), "Batoi", 90, 80, 200, 15));
+        this.add(new ViajeFlexible(new Usuario("Anon", "1234"), "Batoi no se que", 90, 80, 200, 15));
+        this.add(new Viaje(new Usuario("Anon", "1234"), "Batoi", 90, 80, 200, 15));
         this.add(new ViajeExclusivo(new Usuario("Jordi", "1234"), "Raro", 90, 5, 1, 5));
         
         

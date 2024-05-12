@@ -1,6 +1,7 @@
 package entidades;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Random;
 
 
@@ -12,16 +13,12 @@ public class Reserva {
     private Viaje viaje;
 
     public Reserva(Usuario usuario, Viaje viaje, int plazas) {
-        if (usuario.equals(viaje.getPropietario()) && !viaje.getCancelado() && !viaje.getCerrado() && viaje.getOfertadas() >= plazas) {
+        if (!usuario.equals(viaje.getPropietario()) && !viaje.getCancelado() && !viaje.getCerrado() && viaje.getOfertadas() >= plazas) {
             ponerCodigo();
             this.usuario = usuario;
             this.plazas = plazas;
             this.viaje = viaje;
          }
-    }
-    
-    protected Reserva(int codigo){
-        this.codigo = codigo;
     }
     
     
@@ -35,24 +32,36 @@ public class Reserva {
         }while (!insertado);
         codigo = cod;
     }
+
+    public int getCodigo() {
+        return codigo;
+    }
     
     public Usuario getUsuario(){
         return usuario;
+    }
+    
+    public Viaje getViaje() {
+        return viaje;
     }
     
     public int getPlazas(){
         return plazas;
     }
     
+    public boolean isIgual(int codigo){
+        return this.codigo == codigo;
+    }
+    
     @Override
     public boolean equals(Object reserva) {
         Reserva r = (Reserva) reserva;
-        return r.codigo == this.codigo;
+        return this.usuario.equals(r.usuario) && this.viaje.equals(r.viaje);
     }
     
     @Override
     public int hashCode() {
-        return usuario.hashCode()+viaje.hashCode();
+        return Objects.hash(usuario, viaje);
     }
 
 }

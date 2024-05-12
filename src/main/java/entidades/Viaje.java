@@ -21,7 +21,7 @@ public class Viaje {
     private double precio;
     private boolean cerrado;
     private boolean cancelado;
-    private ArrayList<Reserva> reservas;
+    private HashSet<Reserva> reservas;
 
     public Viaje() {
         this.codigo = 0;
@@ -37,13 +37,13 @@ public class Viaje {
         this.precio = precio;
         this.cerrado = false;
         this.cancelado = false;
-        reservas = new ArrayList<>();
+        reservas = new HashSet<>();
     }
 
-    public Viaje(int codigo){
+    public Viaje(int codigo) {
         this.codigo = codigo;
     }
-    
+
     /* dar de alta viaje */
     public void altaViaje(Usuario propietario, String ruta, int duracion, int plazasTotales, double precio) {
         this.propietario = propietario;
@@ -97,28 +97,33 @@ public class Viaje {
         return "Estandar";
     }
 
-    public void hacerReserva(Usuario usuario, int plazas) {
-        if (plazasOfertadas >= plazas && !usuario.equals(this.propietario)) {
-            reservas.add(new Reserva(usuario, this, plazas));
-            plazasOfertadas = -plazas;
+    public Reserva hacerReserva(Usuario usuario, int plazas) {
+        Reserva r = new Reserva(usuario, this, plazas);
+        if (reservas.add(r)) {
+            plazasOfertadas -= plazas;
+            return r;
         }
+        return null;
     }
 
-    protected void cambiarPlazasReserva(Reserva reserva, int plazas) {
+    protected Reserva cambiarPlazasReserva(Reserva reserva, int plazas) {
         if (!cerrado && this.getOfertadas() >= plazas) {
             Usuario user = reserva.getUsuario();
-            reservas.remove(reserva);
-            this.hacerReserva(user , plazas);
+            cancelarReserva(reserva.getCodigo());
+            return this.hacerReserva(user, plazas);
         }
+        return null;
     }
 
     protected void cancelarReserva(int codigo) {
-        for (Reserva reserva : reservas) {
-            if (reserva.equals(new Reserva(codigo))) {
-                plazasOfertadas =+ reserva.getPlazas();
+        for (Reserva r : reservas) {
+            if (r.isIgual(codigo)) {
+                plazasOfertadas += r.getPlazas();
+                reservas.remove(r);
+                
+                break;
             }
         }
-        reservas.remove(new Reserva(codigo));
     }
 
     private void ponerCodigo() {
@@ -136,11 +141,11 @@ public class Viaje {
     public int hashCode() {
         return propietario.hashCode() + duracion + plazasTotales + ruta.hashCode();
     }
-    
+
     @Override
     public boolean equals(Object viaje) {
         Viaje v = (Viaje) viaje;
-        return v.codigo == this.codigo;
+        return this.propietario.equals(v.propietario) && this.ruta.equals(v.ruta) && this.plazasTotales == v.plazasTotales && this.precio == v.precio;
     }
 
     @Override

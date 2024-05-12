@@ -1,5 +1,6 @@
 package entidades.tiposViajes;
 
+import entidades.Reserva;
 import entidades.Usuario;
 import entidades.Viaje;
 
@@ -15,9 +16,9 @@ public class ViajeExclusivo extends Viaje{
     
     
     @Override
-    public void hacerReserva(Usuario usuario, int plazas) {
-        super.hacerReserva(usuario, plazas);
+    public Reserva hacerReserva(Usuario usuario, int plazas) {
         super.setCerrado(true);
+        return super.hacerReserva(usuario, plazas);
     }
     
     @Override

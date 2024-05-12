@@ -1,18 +1,23 @@
 package gestores;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import entidades.Reserva;
+import entidades.Usuario;
+import entidades.Viaje;
+import entidades.tiposViajes.ViajeExclusivo;
+import entidades.tiposViajes.ViajeFlexible;
 
 /**
  * @author Jordi Gisbert Ferriz
  */
 public class ReservasManager {
 
-    private HashSet<Reserva> reservas;
+    private List<Reserva> reservas;
 
     public ReservasManager() {
-        reservas = new HashSet<>();
+        reservas = new ArrayList<>();
         init();
     }
     
@@ -25,8 +30,32 @@ public class ReservasManager {
         return reservas.remove(reserva);
     }
     
+    
+    /**
+     * Obtiene todas las reservas
+     * @return
+     */
+    public List<Reserva> findAll() {
+        return reservas;
+    }
+    
     public void init() {
-
+        
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
