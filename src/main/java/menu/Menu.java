@@ -35,7 +35,6 @@ public class Menu {
         this.reservasController = new ReservasController(null);
         this.usuariosController = new UsuariosController();
         user = null;
-        iniciado = false;
     }
 
     public void iniciar() {
@@ -80,7 +79,7 @@ public class Menu {
     }
 
     private void ejecutarOpcion(int opcionSeleccionada) throws UsuarioSinEstablecerException {
-        if (!iniciado && opcionSeleccionada != OPCION_LOG && opcionSeleccionada != OPCION_LISTA_VIAJES) {
+        if (user==null && opcionSeleccionada != OPCION_LOG && opcionSeleccionada != OPCION_LISTA_VIAJES) {
             throw new UsuarioSinEstablecerException();
         }
 
@@ -88,7 +87,6 @@ public class Menu {
             case OPCION_LOG -> {
                 user = usuariosController.log();
                 init(user);
-                iniciado = true;
             }
             case OPCION_LISTA_VIAJES -> viajesController.listarViajes();
             case OPCION_ADD_VIAJE -> viajesController.anyadirViaje(user);

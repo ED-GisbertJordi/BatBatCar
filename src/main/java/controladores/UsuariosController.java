@@ -1,6 +1,7 @@
 package controladores;
 
 import entidades.Usuario;
+import excepciones.*;
 import gestores.UsuariosManager;
 import views.GestorIO;
 
@@ -20,15 +21,22 @@ public class UsuariosController {
     public Usuario log() {
         final int INTENTOS = 3;
         for (int i = 0; i < INTENTOS; i++) {
-            String name = GestorIO.getString("UserName");
-            String pass = GestorIO.getString("Passeord");
-            Usuario user = new Usuario(name, pass);
-            if (gestor.existente(user)) {
+            try{
+                String name = GestorIO.getString("UserName");
+                String pass = GestorIO.getString("Passeord");
+                Usuario user = new Usuario(name, pass);
+                if (!gestor.existente(user)) {
+                    throw new CredencialesInvalidasExcepcion();
+                }
                 return user;
+            }catch (CredencialesInvalidasExcepcion e){
+                GestorIO.print(e.getMessage());
             }
+            
+
         }
         GestorIO.print("Se ha alcanzado el número máximo de intentos. ");
-        return null;
+        throw new MaximoIntentosAlcanzadosExcepcion();
     }
 
 }
