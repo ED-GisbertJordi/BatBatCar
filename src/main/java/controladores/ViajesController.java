@@ -114,9 +114,10 @@ public class ViajesController {
 
     public void cancelarViaje(int codigo) {
         List<Viaje> viajes = getViajesCancelables();
-        if (viajes.remove(new Viaje(codigo))) {
-            gestor.cancel(new Viaje(codigo));
-            GestorIO.print("El viaje se ha cancelado correctamente.");
+        Viaje v = new Viaje(codigo);
+        if (isValido(codigo) && viajes.remove(v)) {
+        gestor.cancel(v);
+        GestorIO.print("El viaje se ha cancelado correctamente.");
         } else {
             GestorIO.print("El viaje no se ha podido cancelado, compruebe el código.");
         }
@@ -160,5 +161,11 @@ public class ViajesController {
         Viaje v = getViaje(codigo);
         return v != null && !v.getCerrado() && !v.getCancelado() && (v instanceof ViajeFlexible || v instanceof ViajeCancelable);
     }
-
+    
+    private boolean isValido(int codigo){
+        Viaje v = getViaje(codigo);
+        return v!=null && !v.getCerrado() && !v.getCancelado() && v.getPropietario() != null;        
+    }
+    
+    
 }
