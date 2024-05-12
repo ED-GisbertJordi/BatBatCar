@@ -2,7 +2,7 @@ package menu;
 
 import controladores.*;
 import entidades.Usuario;
-import excepciones.UsuarioSinEstablecerException;
+import excepciones.*;
 import views.GestorIO;
 
 /**
@@ -47,7 +47,7 @@ public class Menu {
             opcionSeleccionada = solicitarOpcion();
             try {
                 ejecutarOpcion(opcionSeleccionada);
-            } catch (UsuarioSinEstablecerException e) {
+            } catch (UsuarioSinEstablecerException | ViajeNoValidoException e) {
                 GestorIO.print(e.getMessage() + "\n");
             }
         } while (opcionSeleccionada != OPCION_SALIR);
@@ -78,7 +78,7 @@ public class Menu {
         this.reservasController = new ReservasController(user);
     }
 
-    private void ejecutarOpcion(int opcionSeleccionada) throws UsuarioSinEstablecerException {
+    private void ejecutarOpcion(int opcionSeleccionada) throws UsuarioSinEstablecerException, ViajeNoValidoException {
         if (user==null && opcionSeleccionada != OPCION_LOG && opcionSeleccionada != OPCION_LISTA_VIAJES) {
             throw new UsuarioSinEstablecerException();
         }

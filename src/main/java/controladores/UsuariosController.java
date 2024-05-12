@@ -32,8 +32,6 @@ public class UsuariosController {
             }catch (CredencialesInvalidasExcepcion e){
                 GestorIO.print(e.getMessage());
             }
-            
-
         }
         GestorIO.print("Se ha alcanzado el número máximo de intentos. ");
         throw new MaximoIntentosAlcanzadosExcepcion();

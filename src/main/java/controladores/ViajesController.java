@@ -14,6 +14,7 @@ import java.util.StringTokenizer;
 
 import entidades.Reserva;
 import entidades.tiposViajes.*;
+import excepciones.ViajeNoValidoException;
 
 public class ViajesController {
 
@@ -74,7 +75,7 @@ public class ViajesController {
      * Añade un viaje al sistema, preguntando previamente por toda la
      * información necesaria para crearlo.
      */
-    public void anyadirViaje(Usuario propietario) {
+    public void anyadirViaje(Usuario propietario) throws ViajeNoValidoException{
         final int ESTANDAR = 1;
         final int CANCELABLE = 2;
         final int EXCLUSIVO = 3;
@@ -85,7 +86,10 @@ public class ViajesController {
                 + EXCLUSIVO + "- Viaje Exclusivo\n"
                 + FLEXIBLE + "- Viaje Flexible\n"
                 + "Seleccione el tipo de viaje");
-        TiposViajes tipo = (numeroTipoViaje == 1) ? TiposViajes.Estandar : (numeroTipoViaje == 2) ? TiposViajes.Cancelable : (numeroTipoViaje == 3) ? TiposViajes.Exclusivo : TiposViajes.Flexible;
+        if (numeroTipoViaje < ESTANDAR || numeroTipoViaje > FLEXIBLE) {
+            throw new ViajeNoValidoException();
+         }
+        TiposViajes tipo = (numeroTipoViaje == ESTANDAR) ? TiposViajes.Estandar : (numeroTipoViaje == CANCELABLE) ? TiposViajes.Cancelable : (numeroTipoViaje == EXCLUSIVO) ? TiposViajes.Exclusivo : TiposViajes.Flexible;
 
         String ruta = GestorIO.getString("Introduzca la ruta a realizar (Ej: Alcoy-Alicante)");
         int duracion = GestorIO.getInt("Introduzca la duracion del viaje en minutos");
