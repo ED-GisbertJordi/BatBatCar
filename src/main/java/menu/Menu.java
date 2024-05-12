@@ -1,8 +1,8 @@
 package menu;
 
 import controladores.*;
-import entidades.Reserva;
 import entidades.Usuario;
+import excepciones.UsuarioSinEstablecerException;
 import views.GestorIO;
 
 /**
@@ -46,7 +46,11 @@ public class Menu {
         do {
             mostrarOpciones();
             opcionSeleccionada = solicitarOpcion();
-            ejecutarOpcion(opcionSeleccionada);
+            try {
+                ejecutarOpcion(opcionSeleccionada);
+            } catch (UsuarioSinEstablecerException e) {
+                GestorIO.print(e.getMessage() + "\n");
+            }
         } while (opcionSeleccionada != OPCION_SALIR);
         GestorIO.print("Adiós");
 
@@ -75,100 +79,69 @@ public class Menu {
         this.reservasController = new ReservasController(user);
     }
 
-    private void ejecutarOpcion(int opcionSeleccionada) {
-        // Implementar método para ejecutar la opción recibida
+    private void ejecutarOpcion(int opcionSeleccionada) throws UsuarioSinEstablecerException {
+        if (!iniciado && opcionSeleccionada != OPCION_LOG && opcionSeleccionada != OPCION_LISTA_VIAJES) {
+            throw new UsuarioSinEstablecerException();
+        }
+
         switch (opcionSeleccionada) {
             case OPCION_LOG -> {
                 user = usuariosController.log();
                 init(user);
                 iniciado = true;
-                if (!iniciado) {
-                    opcionSeleccionada = OPCION_SALIR;
-                }
             }
-            case OPCION_LISTA_VIAJES ->
-                viajesController.listarViajes();
-            case OPCION_ADD_VIAJE -> {
-                if (iniciado) {
-                    viajesController.anyadirViaje(user);
-                } else {
-                    inicie();
-                }
-            }
+            case OPCION_LISTA_VIAJES -> viajesController.listarViajes();
+            case OPCION_ADD_VIAJE -> viajesController.anyadirViaje(user);
             case OPCION_CANCELAR_VIAJE -> {
-                if (iniciado) {
-                    viajesController.listarViajesCancelabes();
-                    int codigo = GestorIO.getInt("Introduce el código del viaje a seleccionar");
-                    viajesController.cancelarViaje(codigo);
-                } else {
-                    inicie();
-                }
+                viajesController.listarViajesCancelabes();
+                int codigo = GestorIO.getInt("Introduce el código del viaje a seleccionar");
+                viajesController.cancelarViaje(codigo);
             }
             case OPCION_ADD_RESERVA -> {
-                if (iniciado) {
-                    viajesController.listarViajesReservables();
-                    int codigo = GestorIO.getInt("Introduce el código del viaje a seleccionar");
-                    reservasController.anyadirReserva(viajesController.getViaje(codigo), user);
-                } else {
-                    inicie();
-                }
+                viajesController.listarViajesReservables();
+                int codigo = GestorIO.getInt("Introduce el código del viaje a seleccionar");
+                reservasController.anyadirReserva(viajesController.getViaje(codigo), user);
             }
             case OPCION_MOD_RESERVA -> {
-                if (iniciado) {
-                    reservasController.listarReservasModificables();
-                    if (!reservasController.getReservasModificables().isEmpty()) {
-                        int codigo = GestorIO.getInt("Introduce el código de la reserva a modificar");
-                        if (reservasController.getReserva(codigo) != null) {
-                            if (viajesController.getModificable(reservasController.getReserva(codigo).getViaje().getCodigo())) {
-                                reservasController.modificarReserva(reservasController.getReserva(codigo));
-                            } else {
-                                GestorIO.print("Error: El viaje no permite Cambios en las reservas.");
-                            }
+                reservasController.listarReservasModificables();
+                if (!reservasController.getReservasModificables().isEmpty()) {
+                    int codigo = GestorIO.getInt("Introduce el código de la reserva a modificar");
+                    if (reservasController.getReserva(codigo) != null) {
+                        if (viajesController.getModificable(reservasController.getReserva(codigo).getViaje().getCodigo())) {
+                            reservasController.modificarReserva(reservasController.getReserva(codigo));
                         } else {
-                            GestorIO.print("El código no corresponde con un Viaje valido.");
+                            GestorIO.print("Error: El viaje no permite Cambios en las reservas.");
                         }
+                    } else {
+                        GestorIO.print("El código no corresponde con un Viaje valido.");
                     }
-                } else {
-                    inicie();
                 }
             }
             case OPCION_CANCELAR_RESERVA -> {
-                if (iniciado) {
-                    reservasController.listarReservasCancelables();
-                    if (!reservasController.getReservasCancelables().isEmpty()) {
-                        int codigo = GestorIO.getInt("Introduce el código de la reserva a modificar");
-                        if (reservasController.getReserva(codigo) != null) {
-                            if (viajesController.getCancelable(reservasController.getReserva(codigo).getViaje().getCodigo())) {
-                                reservasController.cancelarReserva(reservasController.getReserva(codigo));
-                            } else {
-                                GestorIO.print("Error: El viaje no permite Cambios en las reservas.");
-                            }
+                reservasController.listarReservasCancelables();
+                if (!reservasController.getReservasCancelables().isEmpty()) {
+                    int codigo = GestorIO.getInt("Introduce el código de la reserva a modificar");
+                    if (reservasController.getReserva(codigo) != null) {
+                        if (viajesController.getCancelable(reservasController.getReserva(codigo).getViaje().getCodigo())) {
+                            reservasController.cancelarReserva(reservasController.getReserva(codigo));
                         } else {
-                            GestorIO.print("El código no corresponde con un Viaje valido.");
+                            GestorIO.print("Error: El viaje no permite Cambios en las reservas.");
                         }
+                    } else {
+                        GestorIO.print("El código no corresponde con un Viaje valido.");
                     }
-                } else {
-                    inicie();
                 }
             }
             case OPCION_BUSCAR_VIAJE_Y_ADD_RESERVA -> {
-                if (iniciado) {
-                    String sitio = GestorIO.getString("Introduzca la ciudad a la que desea viajar");
-                    viajesController.listarSitio(sitio);
-                    if (GestorIO.confirmar("¿Quiere realizar una reserva?")) {
-                        viajesController.buscarViaje(sitio);
-                        int codigo = GestorIO.getInt("Introduce el código del viaje a seleccionar");
-                        reservasController.anyadirReserva(viajesController.getViaje(codigo), user);
-                    }
-                } else {
-                    inicie();
+                String sitio = GestorIO.getString("Introduzca la ciudad a la que desea viajar");
+                viajesController.listarSitio(sitio);
+                if (GestorIO.confirmar("¿Quiere realizar una reserva?")) {
+                    viajesController.buscarViaje(sitio);
+                    int codigo = GestorIO.getInt("Introduce el código del viaje a seleccionar");
+                    reservasController.anyadirReserva(viajesController.getViaje(codigo), user);
                 }
             }
         }
-    }
-
-    private void inicie() {
-        GestorIO.print("Inicie sesion antes de realizar la acción.\n");
     }
 
 }
