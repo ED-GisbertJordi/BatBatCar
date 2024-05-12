@@ -117,7 +117,6 @@ public class ReservasController {
 
     public void modificarReserva(Reserva reserva) {
         final int NUM_PLAZA_MIN = 1;
-
         if (comprovaciones(reserva.getViaje(), user)) {
             ViajeFlexible v = (ViajeFlexible) reserva.getViaje();
             if (v.getOfertadas() >= NUM_PLAZA_MIN) {

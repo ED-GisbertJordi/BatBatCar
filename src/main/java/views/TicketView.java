@@ -21,7 +21,7 @@ public class TicketView {
     private final int codigo;
     private final int plazas;
     
-    private static final int ANCHO_TABLA = 100;
+    private static final int ANCHO_TABLA = 50;
 
     public TicketView(Usuario user, int codigo, int plazas) {
         this.user = user;

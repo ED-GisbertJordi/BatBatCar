@@ -153,7 +153,13 @@ public class Menu {
             }
             case OPCION_BUSCAR_VIAJE_Y_ADD_RESERVA -> {
                 if (iniciado) {
-                    viajesController.listarViajes();
+                    String sitio = GestorIO.getString("Introduzca la ciudad a la que desea viajar");
+                    viajesController.listarSitio(sitio);
+                    if (GestorIO.confirmar("¿Quiere realizar una reserva?")) {
+                        viajesController.buscarViaje(sitio);
+                        int codigo = GestorIO.getInt("Introduce el código del viaje a seleccionar");
+                        reservasController.anyadirReserva(viajesController.getViaje(codigo), user);
+                    }
                 } else {
                     inicie();
                 }

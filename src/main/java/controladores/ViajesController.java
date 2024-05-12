@@ -10,6 +10,7 @@ import views.GestorIO;
 import views.ListadoViajesView;
 
 import java.util.List;
+import java.util.StringTokenizer;
 
 import entidades.Reserva;
 import entidades.tiposViajes.*;
@@ -120,8 +121,27 @@ public class ViajesController {
             GestorIO.print("El viaje no se ha podido cancelado, compruebe el código.");
         }
     }
+
+    public List<Viaje> buscarViaje(String sitio) {
+        List<Viaje> viajes = gestor.findAll();
+        List<Viaje> rutas = new ArrayList<>();
+        for (Viaje viaje : viajes) {
+            StringTokenizer tokenizer = new StringTokenizer(viaje.getRuta(), "-");
+            while (!viaje.getPropietario().equals(usuario) && tokenizer.hasMoreTokens()) {
+                String token = tokenizer.nextToken().toLowerCase();                
+                if (token.equals(sitio.toLowerCase())) {
+                    rutas.add(viaje);
+                }
+            }
+        }
+        return rutas;
+    }
     
-    public Viaje getViaje(int codigo){
+    public void listarSitio(String sitio) {
+        printViajes(buscarViaje(sitio));
+    }
+
+    public Viaje getViaje(int codigo) {
         List<Viaje> viajes = gestor.findAll();
         for (Viaje viaje : viajes) {
             if (viaje.getCodigo() == codigo) {
@@ -131,15 +151,14 @@ public class ViajesController {
         return null;
     }
 
-    
     public boolean getModificable(int codigo) {
         Viaje v = getViaje(codigo);
         return v != null && !v.getCerrado() && !v.getCancelado() && v instanceof ViajeFlexible;
     }
-    
+
     public boolean getCancelable(int codigo) {
         Viaje v = getViaje(codigo);
         return v != null && !v.getCerrado() && !v.getCancelado() && (v instanceof ViajeFlexible || v instanceof ViajeCancelable);
     }
-    
+
 }
