@@ -84,31 +84,36 @@ public class ViajesController {
                 + EXCLUSIVO + "- Viaje Exclusivo\n"
                 + FLEXIBLE + "- Viaje Flexible\n"
                 + "Seleccione el tipo de viaje");
-        TiposViajes tipo = (numeroTipoViaje == 1) ? TiposViajes.Estandar : (numeroTipoViaje == 2) ? TiposViajes.Cancelable : (numeroTipoViaje == 3) ? TiposViajes.Exclusivo : TiposViajes.Flexible;
+        if (numeroTipoViaje < ESTANDAR || numeroTipoViaje > FLEXIBLE) {
+            TiposViajes tipo = (numeroTipoViaje == 1) ? TiposViajes.Estandar : (numeroTipoViaje == 2) ? TiposViajes.Cancelable : (numeroTipoViaje == 3) ? TiposViajes.Exclusivo : TiposViajes.Flexible;
 
-        String ruta = GestorIO.getString("Introduzca la ruta a realizar (Ej: Alcoy-Alicante)");
-        int duracion = GestorIO.getInt("Introduzca la duracion del viaje en minutos");
-        double precio = GestorIO.getInt("Introduzca el precio de cada plaza");
-        int plazasTotales = GestorIO.getInt("Introduzca la nuemro de plazas");
-        int plazasOfertadas = GestorIO.getInt("Introduzca la nuemro de plazas disponibles");
+            String ruta = GestorIO.getString("Introduzca la ruta a realizar (Ej: Alcoy-Alicante)");
+            int duracion = GestorIO.getInt("Introduzca la duracion del viaje en minutos");
+            double precio = GestorIO.getInt("Introduzca el precio de cada plaza");
+            int plazasTotales = GestorIO.getInt("Introduzca la nuemro de plazas");
+            int plazasOfertadas = GestorIO.getInt("Introduzca la nuemro de plazas disponibles");
 
-        Viaje nuevo = null;
-        switch (tipo) {
-            case Estandar -> {
-                nuevo = new Viaje(propietario, ruta, duracion, plazasTotales, plazasOfertadas, precio);
+            Viaje nuevo = null;
+            switch (tipo) {
+                case Estandar -> {
+                    nuevo = new Viaje(propietario, ruta, duracion, plazasTotales, plazasOfertadas, precio);
+                }
+                case Cancelable -> {
+                    nuevo = new ViajeCancelable(propietario, ruta, duracion, plazasTotales, plazasOfertadas, precio);
+                }
+                case Exclusivo -> {
+                    nuevo = new ViajeExclusivo(propietario, ruta, duracion, plazasTotales, plazasOfertadas, precio);
+                }
+                case Flexible -> {
+                    nuevo = new ViajeFlexible(propietario, ruta, duracion, plazasTotales, plazasOfertadas, precio);
+                }
             }
-            case Cancelable -> {
-                nuevo = new ViajeCancelable(propietario, ruta, duracion, plazasTotales, plazasOfertadas, precio);
-            }
-            case Exclusivo -> {
-                nuevo = new ViajeExclusivo(propietario, ruta, duracion, plazasTotales, plazasOfertadas, precio);
-            }
-            case Flexible -> {
-                nuevo = new ViajeFlexible(propietario, ruta, duracion, plazasTotales, plazasOfertadas, precio);
-            }
+            this.gestor.add(nuevo);
+            GestorIO.print(nuevo + " añadido con éxito");
+         }else{
+            GestorIO.print("Error: Tipo de viaje no valido.");
         }
-        this.gestor.add(nuevo);
-        GestorIO.print(nuevo + " añadido con éxito");
+        
     }
 
     public void cancelarViaje(int codigo) {
