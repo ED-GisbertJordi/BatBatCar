@@ -88,7 +88,7 @@ public class ViajesController {
 
             String ruta = GestorIO.getString("Introduzca la ruta a realizar (Ej: Alcoy-Alicante)");
             int duracion = GestorIO.getInt("Introduzca la duracion del viaje en minutos");
-            double precio = GestorIO.getInt("Introduzca el precio de cada plaza");
+            double precio = GestorIO.getFloat("Introduzca el precio de cada plaza");
             int plazasTotales = GestorIO.getInt("Introduzca la nuemro de plazas");
             int plazasOfertadas = GestorIO.getInt("Introduzca la nuemro de plazas disponibles");
 
