@@ -117,7 +117,6 @@ public class Viaje {
 
     protected void cancelarReserva(int codigo) {
         for (Reserva r : reservas) {
-            System.out.println(r.getCodigo()+" - "+codigo);
             if (r.isIgual(codigo)) {
                 plazasOfertadas += r.getPlazas();
                 reservas.remove(r);
