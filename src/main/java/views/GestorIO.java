@@ -52,6 +52,16 @@ public class GestorIO {
             scanner.next();
         } while (true);
     }
+    
+    public static double getFloat(String mensaje, int min, int max) {
+         do {
+            double numero = getFloat(mensaje);
+            if (numero >= min && numero <= max) {
+                return numero;
+            }
+            System.out.println("Error! Número fuera de rango");
+        } while (true);
+    }
 
     public static String getString(String mensaje) {
         System.out.print(mensaje + ": ");
