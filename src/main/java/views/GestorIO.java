@@ -7,6 +7,8 @@ package views;
  * métodos aquí establecidos (puedes añadir nuevos, si lo crees conveniente).
  */
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class GestorIO {
@@ -65,6 +67,25 @@ public class GestorIO {
             }
 
             System.out.println("¡Error! Debe introducir S o N");
+        } while (true);
+    }
+    
+    public static LocalDateTime getFecheHora() {
+        do {
+            System.out.print("Introduzca la fecha (Ej: 10-10-2024): ");
+            String fechaStr = scanner.nextLine();
+
+            System.out.print("Introduzca la hora (Ej: 23:15): ");
+            String horaStr = scanner.nextLine();
+
+            String fechaHoraStr = fechaStr + "T" + horaStr;
+            try {
+                DateTimeFormatter formateador = DateTimeFormatter.ofPattern("dd-MM-yyyy'T'HH:mm");
+                LocalDateTime fechaHora = LocalDateTime.parse(fechaHoraStr, formateador);
+                return fechaHora;
+            } catch (Exception e) {
+                System.out.println("Error al parsear la fecha o la hora.");
+            }
         } while (true);
     }
     

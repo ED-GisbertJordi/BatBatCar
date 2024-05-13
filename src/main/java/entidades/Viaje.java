@@ -3,7 +3,7 @@ package entidades;
 /*
  * Clase que representa a un viaje estándar
  */
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Random;
 
@@ -15,6 +15,7 @@ public class Viaje {
     private int codigo;
     private Usuario propietario;
     private String ruta;
+    private LocalDateTime horaSalida;
     private int duracion;
     private int plazasTotales;
     private int plazasOfertadas;
@@ -27,10 +28,11 @@ public class Viaje {
         this.codigo = 0;
     }
 
-    public Viaje(Usuario propietario, String ruta, int duracion, int plazasTotales, int plazasOfertadas, double precio) {
+    public Viaje(Usuario propietario, String ruta, LocalDateTime horaSalida, int duracion, int plazasTotales, int plazasOfertadas, double precio) {
         ponerCodigo();
         this.propietario = propietario;
         this.ruta = ruta;
+        this.horaSalida = horaSalida;
         this.duracion = duracion;
         this.plazasTotales = plazasTotales;
         this.plazasOfertadas = (plazasOfertadas <= plazasTotales) ? plazasOfertadas : plazasTotales;
@@ -67,6 +69,10 @@ public class Viaje {
 
     public String getRuta() {
         return ruta;
+    }
+
+    public LocalDateTime getHoraSalida() {
+        return horaSalida;
     }
 
     public double getPrecio() {

@@ -1,5 +1,7 @@
 package entidades.tiposViajes;
 
+import java.time.LocalDateTime;
+
 import entidades.Reserva;
 import entidades.Usuario;
 import entidades.Viaje;
@@ -9,8 +11,8 @@ import entidades.Viaje;
  */
 public class ViajeFlexible extends Viaje {
 
-    public ViajeFlexible(Usuario propietario, String ruta, int duracion, int plazasTotales, int plazasOfertadas, double precio) {
-        super(propietario, ruta, duracion, plazasTotales, plazasOfertadas, precio);
+    public ViajeFlexible(Usuario propietario, String ruta, LocalDateTime horaSalida, int duracion, int plazasTotales, int plazasOfertadas, double precio) {
+        super(propietario, ruta, horaSalida, duracion, plazasTotales, plazasOfertadas, precio);
     }
 
     @Override

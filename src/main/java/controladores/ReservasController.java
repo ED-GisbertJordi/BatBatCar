@@ -28,6 +28,10 @@ public class ReservasController {
         this.user = usuario;
     }
 
+    public void setUsuario(Usuario user) {
+        this.user = user;
+    }
+
     public void anyadirReserva(Viaje viaje, Usuario usuario) throws ReservaNoValidaException, ViajeNoValidoException {
         final int NUM_PLAZA_MIN = 1;
         if (comprobarUsuario(viaje, usuario) && viaje.getOfertadas() >= NUM_PLAZA_MIN) {
@@ -36,7 +40,7 @@ public class ReservasController {
             if (reserva != null) {
                 this.gestor.add(reserva);
                 GestorIO.print("Reserva realizada con éxito. A continuación se mostrará el ticket de confirmación.");
-                (new TicketView(usuario, viaje.getCodigo(), plazas)).visualizar();
+                (new TicketView(usuario, viaje.getCodigo(), plazas, reserva.getHora())).visualizar();
             } else {
                 throw new ReservaNoValidaException();
             }
@@ -122,7 +126,7 @@ public class ReservasController {
                 GestorIO.print("Reserva realizada con éxito. A continuación se mostrará el ticket de confirmación.");
                 gestor.remove(reserva);
                 gestor.add(r);
-                (new TicketView(user, r.getViaje().getCodigo(), plazas)).visualizar();
+                (new TicketView(user, r.getViaje().getCodigo(), plazas,reserva.getHora())).visualizar();
             } else {
                 throw new ReservaNoValidaException();
             }

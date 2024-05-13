@@ -2,6 +2,8 @@ package gestores;
 
 import entidades.Viaje;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,13 +63,14 @@ public class ViajesManager {
     private void init() {
         // añade a la colección "viajes" todos los viajes que creas necesario tener de inicio en tu sistema
         // this.add(new Viaje(....));
-        this.add(new Viaje(new Usuario("Jordi", "1234"), "Random", 30, 110, 110, 5));
-        this.add(new ViajeCancelable(new Usuario("Jordi", "1234"), "Tex", 60, 30, 30, 10));
-        this.add(new ViajeFlexible(new Usuario("Jordi", "1234"), "Batoi", 90, 80, 200, 15));
-        this.add(new ViajeFlexible(new Usuario("Anon", "1234"), "Batoi", 90, 80, 200, 15));
-        this.add(new ViajeFlexible(new Usuario("Anon", "1234"), "Batoi-no-se-que", 90, 80, 200, 15));
-        this.add(new Viaje(new Usuario("Anon", "1234"), "Batoi", 90, 80, 200, 15));
-        this.add(new ViajeExclusivo(new Usuario("Jordi", "1234"), "Raro", 90, 5, 1, 5));
+        this.add(new Viaje(new Usuario("Jordi", "1234"), "Random",  LocalDateTime.of(2024, 5,20,15,30), 30, 110, 110, 5));
+        this.add(new ViajeCancelable(new Usuario("Jordi", "1234"), "Tex",LocalDateTime.of(2024, 5,20,15,30), 60, 30, 30, 10));
+        this.add(new ViajeFlexible(new Usuario("Jordi", "1234"), "Batoi",LocalDateTime.of(2024, 5,20,15,30), 90, 80, 200, 15));
+        this.add(new ViajeFlexible(new Usuario("Anon", "1234"), "Batoi", LocalDateTime.of(2024, 5,20,15,30),90, 80, 200, 15));
+        this.add(new ViajeFlexible(new Usuario("Anon", "1234"), "Batoi-no-se-que", LocalDateTime.of(2024, 5,20,15,30),90, 80, 200, 15));
+        this.add(new Viaje(new Usuario("Anon", "1234"), "Batoi", LocalDateTime.of(2024, 5,20,15,30),90, 80, 200, 15));
+        this.add(new ViajeExclusivo(new Usuario("Anon", "1234"), "Batoi", LocalDateTime.of(2024, 5,20,15,30),90, 80, 200, 15));
+        this.add(new ViajeExclusivo(new Usuario("Jordi", "1234"), "Raro", LocalDateTime.of(2024, 5,2,15,30),90, 5, 1, 5));
         
         
     }

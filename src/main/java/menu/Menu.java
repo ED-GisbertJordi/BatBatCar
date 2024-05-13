@@ -46,7 +46,7 @@ public class Menu {
             opcionSeleccionada = solicitarOpcion();
             try {
                 ejecutarOpcion(opcionSeleccionada);
-            } catch (UsuarioSinEstablecerException | ViajeNoValidoException | ReservaNoValidaException e) {
+            } catch (UsuarioSinEstablecerException | ViajeNoValidoException | ReservaNoValidaException | ReservaNoCancelableException e) {
                 GestorIO.print(e.getMessage() + "\n");
             }
         } while (opcionSeleccionada != OPCION_SALIR);
@@ -73,11 +73,11 @@ public class Menu {
     }
 
     private void init(Usuario user) {
-        this.viajesController = new ViajesController(user);
-        this.reservasController = new ReservasController(user);
+        this.viajesController.setUsuario(user);
+        this.reservasController.setUsuario(user);
     }
 
-    private void ejecutarOpcion(int opcionSeleccionada) throws UsuarioSinEstablecerException, ViajeNoValidoException, ReservaNoValidaException {
+    private void ejecutarOpcion(int opcionSeleccionada) throws UsuarioSinEstablecerException, ViajeNoValidoException, ReservaNoValidaException, ReservaNoCancelableException {
         if (user==null && opcionSeleccionada != OPCION_LOG && opcionSeleccionada != OPCION_LISTA_VIAJES) {
             throw new UsuarioSinEstablecerException();
         }
@@ -124,7 +124,7 @@ public class Menu {
                         if (viajesController.getCancelable(reservasController.getReserva(codigo).getViaje().getCodigo())) {
                             reservasController.cancelarReserva(reservasController.getReserva(codigo));
                         } else {
-                            throw new ViajeNoValidoException();
+                            throw new ReservaNoCancelableException();
                         }
                     } else {
                         throw new ReservaNoValidaException();

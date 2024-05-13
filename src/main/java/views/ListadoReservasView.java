@@ -5,11 +5,14 @@ package views;
  * ruta, precio, propietario, tipo de viaje, plazas disponibles y si está
  * cancelado.
  */
+import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 
 import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
+
 import java.util.List;
+
 import entidades.Reserva;
 
 public class ListadoReservasView {
@@ -26,11 +29,11 @@ public class ListadoReservasView {
 
         AsciiTable view = new AsciiTable();
         view.addRule();
-        view.addRow("*", "*", "*", "*", "*");
+        view.addRow("*", "*", "*", "*","*", "*");
         view.addRule();
-        view.addRow(null,  null, null, null , "Listado Reservas");
+        view.addRow(null,null,  null, null, null , "Listado Reservas");
         view.addRule();
-        view.addRow("Cod. Reserva", "Cod. Viaje", "Propietario", null, "Plazas Reservadas");
+        view.addRow("Cod. Reserva", "Cod. Viaje", "Propietario", null, "Plazas Reservadas", "Fecha");
         view.addRule();
         generarFilasViajes(view);
         view.setTextAlignment(TextAlignment.CENTER);
@@ -49,12 +52,11 @@ public class ListadoReservasView {
     private void generarFilasViajes(AsciiTable tabla) {
 
         // Implementa este método usando un bucle que itere sobre la lista de viajes y mostrando uno por fila.
-        //                      codigo       sepadador          ruta                           precio                  propietario                 tipo                plazas dispo    cancelado
         Iterator i = reservas.iterator();
         while (i.hasNext()) {
             Reserva next =  (Reserva) i.next();
-            
-            tabla.addRow(String.valueOf(next.getCodigo()), String.valueOf(next.getViaje().getCodigo()), next.getViaje().getPropietario().toString(),null, String.valueOf(next.getPlazas()));
+            DateTimeFormatter formateador = DateTimeFormatter.ofPattern("dd-MM-yyyy 'a las' HH:mm");
+            tabla.addRow(String.valueOf(next.getCodigo()), String.valueOf(next.getViaje().getCodigo()), next.getViaje().getPropietario().toString(),null, String.valueOf(next.getPlazas()), next.getHora().format(formateador));
 
         }
         /*

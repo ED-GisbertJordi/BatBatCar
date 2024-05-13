@@ -5,6 +5,7 @@ package views;
  * ruta, precio, propietario, tipo de viaje, plazas disponibles y si está
  * cancelado.
  */
+import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 
 import de.vandermeer.asciitable.AsciiTable;
@@ -27,11 +28,11 @@ public class ListadoViajesView {
 
         AsciiTable view = new AsciiTable();
         view.addRule();
-        view.addRow("*", "*", "*", "*", "*", "*", "*", "*");
+        view.addRow("*", "*", "*", "*", "*", "*", "*", "*", "*");
         view.addRule();
-        view.addRow(null, null, null, null, null, null, null, "Listado Viajes");
+        view.addRow(null, null, null, null, null, null, null, null, "Listado Viajes");
         view.addRule();
-        view.addRow("Cod. Viaje", null, "Ruta", "Precio", "Propietario", "Tipo", "Plazas Disponibles", "Cancelado");
+        view.addRow("Cod. Viaje", null, "Ruta", "Fecha salida", "Precio", "Propietario", "Tipo", "Plazas Disponibles", "Cancelado");
         view.addRule();
         generarFilasViajes(view);
         view.setTextAlignment(TextAlignment.CENTER);
@@ -50,12 +51,12 @@ public class ListadoViajesView {
     private void generarFilasViajes(AsciiTable tabla) {
 
         // Implementa este método usando un bucle que itere sobre la lista de viajes y mostrando uno por fila.
-        //                      codigo       sepadador          ruta                           precio                  propietario                 tipo                plazas dispo    cancelado
+        //                      codigo       sepadador          ruta          fecha salida                 precio                  propietario                 tipo                plazas dispo    cancelado
         Iterator i = viajes.iterator();
         while (i.hasNext()) {
             Viaje next =  (Viaje) i.next();
-            
-            tabla.addRow(next.getCodigo(), null, next.getRuta(), next.getPrecio(), next.getPropietario(), next.getTipo(), next.getOfertadas(), (next.getCancelado()? "Si" : "No"));
+            DateTimeFormatter formateador = DateTimeFormatter.ofPattern("dd-MM-yyyy 'a las' HH:mm");
+            tabla.addRow(next.getCodigo(), null, next.getRuta(), next.getHoraSalida().format(formateador), next.getPrecio(), next.getPropietario(), next.getTipo(), next.getOfertadas(), (next.getCancelado()? "Si" : "No"));
 
         }
         /*

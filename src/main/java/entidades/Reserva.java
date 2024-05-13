@@ -1,5 +1,6 @@
 package entidades;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Random;
@@ -9,6 +10,7 @@ public class Reserva {
     private int codigo;
     private static HashSet<Integer> codigos = new HashSet<>();
     private Usuario usuario;
+    private LocalDateTime hora;
     private int plazas;
     private Viaje viaje;
 
@@ -18,6 +20,9 @@ public class Reserva {
             this.usuario = usuario;
             this.plazas = plazas;
             this.viaje = viaje;
+            this.hora = LocalDateTime.now();
+            System.out.println(this.hora);
+
          }
     }
     
@@ -39,6 +44,10 @@ public class Reserva {
     
     public Usuario getUsuario(){
         return usuario;
+    }
+
+    public LocalDateTime getHora() {
+        return hora;
     }
     
     public Viaje getViaje() {

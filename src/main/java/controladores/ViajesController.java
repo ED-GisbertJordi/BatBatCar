@@ -1,24 +1,22 @@
 package controladores;
 
-import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+import java.time.LocalDateTime;
 
 import entidades.Usuario;
 import entidades.Viaje;
+import entidades.tiposViajes.*;
+
 import gestores.ViajesManager;
 import views.GestorIO;
 import views.ListadoViajesView;
-
-import java.util.List;
-import java.util.StringTokenizer;
-
-import entidades.Reserva;
-import entidades.tiposViajes.*;
 import excepciones.ViajeNoValidoException;
 
 public class ViajesController {
 
-    private Usuario usuario;
+    private Usuario user;
     private ViajesManager gestor;
 
     public ViajesController(Usuario user) {
@@ -27,9 +25,13 @@ public class ViajesController {
         /* Por defecto, no hay establecido ningún usuario. Se deberá establecer a posteriori
          Si no quieres realizar el caso de uso 1 hasta el final puedes establecer un usuario
          por defecto. Por ejemplo: this.usuario = new Usuario("roberto1979", "12345"); */
-        this.usuario = user;
+        this.user = user;
     }
 
+    public void setUsuario(Usuario usuario) {
+        this.user = usuario;
+    }
+    
     private void printViajes(List<Viaje> lista) {
         (new ListadoViajesView(lista)).visualizar();
     }
@@ -45,7 +47,7 @@ public class ViajesController {
         List<Viaje> viajes = gestor.findAll();
         List<Viaje> viajesCancelabes = new ArrayList<>();
         for (Viaje viaje : viajes) {
-            if (usuario.equals(viaje.getPropietario()) && (viaje instanceof ViajeCancelable || viaje instanceof ViajeFlexible)) {
+            if (user.equals(viaje.getPropietario()) && (viaje instanceof ViajeCancelable || viaje instanceof ViajeFlexible)) {
                 viajesCancelabes.add(viaje);
             }
         }
@@ -60,7 +62,7 @@ public class ViajesController {
         List<Viaje> viajes = gestor.findAll();
         List<Viaje> viajesReservables = new ArrayList<>();
         for (Viaje viaje : viajes) {
-            if (!usuario.equals(viaje.getPropietario()) && !viaje.getCancelado() && !viaje.getCerrado()) {
+            if (!user.equals(viaje.getPropietario()) && !viaje.getCancelado() && !viaje.getCerrado()) {
                 viajesReservables.add(viaje);
             }
         }
@@ -70,7 +72,7 @@ public class ViajesController {
     public void listarViajesReservables() {
         printViajes(getViajesReservables());
     }
-
+    
     /**
      * Añade un viaje al sistema, preguntando previamente por toda la
      * información necesaria para crearlo.
@@ -93,6 +95,7 @@ public class ViajesController {
                 + "Seleccione el tipo de viaje");
 
         String ruta = GestorIO.getString("Introduzca la ruta a realizar (Ej: Alcoy-Alicante)");
+        LocalDateTime horaSalida = GestorIO.getFecheHora();
         int duracion = GestorIO.getInt("Introduzca la duracion del viaje en minutos", MIN_DURACION, Integer.MAX_VALUE);
         double precio = GestorIO.getInt("Introduzca el precio de cada plaza", MIN_PRECIO, Integer.MAX_VALUE);
         int plazasTotales = GestorIO.getInt("Introduzca la nuemro de plazas", MIN_PLAZAS , Integer.MAX_VALUE);
@@ -101,16 +104,16 @@ public class ViajesController {
         Viaje nuevo = null;
         switch (numeroTipoViaje) {
             case ESTANDAR -> {
-                nuevo = new Viaje(propietario, ruta, duracion, plazasTotales, plazasOfertadas, precio);
+                nuevo = new Viaje(propietario, ruta,horaSalida, duracion, plazasTotales, plazasOfertadas, precio);
             }
             case CANCELABLE -> {
-                nuevo = new ViajeCancelable(propietario, ruta, duracion, plazasTotales, plazasOfertadas, precio);
+                nuevo = new ViajeCancelable(propietario, ruta, horaSalida, duracion, plazasTotales, plazasOfertadas, precio);
             }
             case EXCLUSIVO -> {
-                nuevo = new ViajeExclusivo(propietario, ruta, duracion, plazasTotales, plazasOfertadas, precio);
+                nuevo = new ViajeExclusivo(propietario, ruta, horaSalida, duracion, plazasTotales, plazasOfertadas, precio);
             }
             case FLEXIBLE -> {
-                nuevo = new ViajeFlexible(propietario, ruta, duracion, plazasTotales, plazasOfertadas, precio);
+                nuevo = new ViajeFlexible(propietario, ruta, horaSalida, duracion, plazasTotales, plazasOfertadas, precio);
             }
             default ->{
                 throw new ViajeNoValidoException();
@@ -137,7 +140,7 @@ public class ViajesController {
         List<Viaje> rutas = new ArrayList<>();
         for (Viaje viaje : viajes) {
             StringTokenizer tokenizer = new StringTokenizer(viaje.getRuta(), "-");
-            if (isValido(viaje.getCodigo()) && !viaje.getPropietario().equals(usuario) && viaje.getOfertadas() >= MIN_PLAZAS) {
+            if (isValido(viaje.getCodigo()) && !viaje.getPropietario().equals(user) && viaje.getOfertadas() >= MIN_PLAZAS) {
                 while (tokenizer.hasMoreTokens()) {
                     String token = tokenizer.nextToken().toLowerCase();                
                     if (token.equals(sitio.toLowerCase())) {

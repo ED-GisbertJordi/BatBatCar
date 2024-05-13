@@ -5,13 +5,12 @@ package views;
  * ruta, precio, propietario, tipo de viaje, plazas disponibles y si está
  * cancelado.
  */
-import java.util.Iterator;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
-import entidades.Viaje;
 
-import java.util.List;
 
 import entidades.Usuario;
 
@@ -20,13 +19,16 @@ public class TicketView {
     private final Usuario user;
     private final int codigo;
     private final int plazas;
+    private String fecha;
     
     private static final int ANCHO_TABLA = 50;
 
-    public TicketView(Usuario user, int codigo, int plazas) {
+    public TicketView(Usuario user, int codigo, int plazas, LocalDateTime fecha) {
         this.user = user;
         this.codigo = codigo;
         this.plazas = plazas;
+        DateTimeFormatter formateador = DateTimeFormatter.ofPattern("dd-MM-yyyy 'a las' HH:mm");
+        this.fecha = fecha.format(formateador);
     }
 
     private AsciiTable buildASCIITable() {
@@ -40,6 +42,8 @@ public class TicketView {
         view.addRow("Usuario", user.toString());
         view.addRule();
         view.addRow("Plazas", String.valueOf(plazas));
+        view.addRule();
+        view.addRow("Fecha", String.valueOf(fecha));
         view.addRule();
         view.setTextAlignment(TextAlignment.CENTER);
         return view;
