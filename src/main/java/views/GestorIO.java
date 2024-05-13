@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
+import excepciones.FechaPasadaException;
+
 public class GestorIO {
 
     private static Scanner scanner;
@@ -82,7 +84,12 @@ public class GestorIO {
             try {
                 DateTimeFormatter formateador = DateTimeFormatter.ofPattern("dd-MM-yyyy'T'HH:mm");
                 LocalDateTime fechaHora = LocalDateTime.parse(fechaHoraStr, formateador);
+                if (!fechaHora.isAfter(LocalDateTime.now())) {
+                    throw new FechaPasadaException();
+                }
                 return fechaHora;
+            } catch (FechaPasadaException e) {
+                System.out.println(e.getMessage());
             } catch (Exception e) {
                 System.out.println("Error al parsear la fecha o la hora.");
             }

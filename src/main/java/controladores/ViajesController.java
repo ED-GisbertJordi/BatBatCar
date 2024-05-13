@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import entidades.Usuario;
 import entidades.Viaje;
 import entidades.tiposViajes.*;
+import excepciones.FechaPasadaException;
 
 import gestores.ViajesManager;
 import views.GestorIO;
@@ -126,7 +127,7 @@ public class ViajesController {
     public void cancelarViaje(int codigo) throws ViajeNoValidoException {
         List<Viaje> viajes = getViajesCancelables();
         Viaje v = getViaje(codigo);
-        if (isValido(codigo) && viajes.remove(v)) {
+        if (viajes.remove(v)) {
         gestor.cancel(v);
         GestorIO.print("El viaje se ha cancelado correctamente.");
         } else {
@@ -181,5 +182,10 @@ public class ViajesController {
         return v!=null && !v.getCerrado() && !v.getCancelado() && v.getPropietario() != null;        
     }
     
+    public void testFecha(int codigo) throws FechaPasadaException{
+        if (!getViaje(codigo).getHoraSalida().isAfter(LocalDateTime.now())) {
+          throw new FechaPasadaException();
+        }
+    }
     
 }

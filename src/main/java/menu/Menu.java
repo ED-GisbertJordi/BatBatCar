@@ -1,5 +1,7 @@
 package menu;
 
+import java.time.LocalDateTime;
+
 import controladores.*;
 import entidades.Usuario;
 import excepciones.*;
@@ -46,7 +48,7 @@ public class Menu {
             opcionSeleccionada = solicitarOpcion();
             try {
                 ejecutarOpcion(opcionSeleccionada);
-            } catch (UsuarioSinEstablecerException | ViajeNoValidoException | ReservaNoValidaException | ReservaNoCancelableException e) {
+            } catch (UsuarioSinEstablecerException | ViajeNoValidoException | ReservaNoValidaException | ReservaNoCancelableException | FechaPasadaException e) {
                 GestorIO.print(e.getMessage() + "\n");
             }
         } while (opcionSeleccionada != OPCION_SALIR);
@@ -77,11 +79,12 @@ public class Menu {
         this.reservasController.setUsuario(user);
     }
 
-    private void ejecutarOpcion(int opcionSeleccionada) throws UsuarioSinEstablecerException, ViajeNoValidoException, ReservaNoValidaException, ReservaNoCancelableException {
+    
+    
+    private void ejecutarOpcion(int opcionSeleccionada) throws UsuarioSinEstablecerException, ViajeNoValidoException, ReservaNoValidaException, ReservaNoCancelableException, FechaPasadaException {
         if (user==null && opcionSeleccionada != OPCION_LOG && opcionSeleccionada != OPCION_LISTA_VIAJES) {
             throw new UsuarioSinEstablecerException();
         }
-
         switch (opcionSeleccionada) {
             case OPCION_LOG -> {
                 user = usuariosController.log();
@@ -92,12 +95,18 @@ public class Menu {
             case OPCION_CANCELAR_VIAJE -> {
                 viajesController.listarViajesCancelabes();
                 int codigo = GestorIO.getInt("Introduce el código del viaje a seleccionar");
-                viajesController.cancelarViaje(codigo);
+                if (viajesController.isValido(codigo)) {
+                    viajesController.testFecha(codigo);
+                    viajesController.cancelarViaje(codigo);
+                }else{
+                    throw new ViajeNoValidoException();
+                }
             }
             case OPCION_ADD_RESERVA -> {
                 viajesController.listarViajesReservables();
                 int codigo = GestorIO.getInt("Introduce el código del viaje a seleccionar");
                 if (viajesController.isValido(codigo)) {
+                    viajesController.testFecha(codigo);
                     reservasController.anyadirReserva(viajesController.getViaje(codigo), user);
                 }else{
                     throw new ViajeNoValidoException();
@@ -108,6 +117,7 @@ public class Menu {
                 if (!reservasController.getReservasModificables().isEmpty()) {
                     int codigo = GestorIO.getInt("Introduce el código de la reserva a modificar");
                     if (reservasController.isValido(codigo) && viajesController.getModificable(reservasController.getReserva(codigo).getViaje().getCodigo())) {
+                        viajesController.testFecha(codigo);
                         reservasController.modificarReserva(reservasController.getReserva(codigo));
                     } else {
                         throw new ViajeNoValidoException();
@@ -122,6 +132,7 @@ public class Menu {
                     int codigo = GestorIO.getInt("Introduce el código de la reserva a modificar");
                     if (reservasController.isValido(codigo)) {
                         if (viajesController.getCancelable(reservasController.getReserva(codigo).getViaje().getCodigo())) {
+                            viajesController.testFecha(codigo);
                             reservasController.cancelarReserva(reservasController.getReserva(codigo));
                         } else {
                             throw new ReservaNoCancelableException();
@@ -141,6 +152,7 @@ public class Menu {
                         viajesController.buscarViaje(sitio);
                         int codigo = GestorIO.getInt("Introduce el código del viaje a seleccionar");
                         if (viajesController.isValido(codigo)) {
+                            viajesController.testFecha(codigo);
                             reservasController.anyadirReserva(viajesController.getViaje(codigo), user);
                         } else {
                             throw new ViajeNoValidoException();

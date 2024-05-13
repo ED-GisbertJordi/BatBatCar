@@ -70,7 +70,7 @@ public class ViajesManager {
         this.add(new ViajeFlexible(new Usuario("Anon", "1234"), "Batoi-no-se-que", LocalDateTime.of(2024, 5,20,15,30),90, 80, 200, 15));
         this.add(new Viaje(new Usuario("Anon", "1234"), "Batoi", LocalDateTime.of(2024, 5,20,15,30),90, 80, 200, 15));
         this.add(new ViajeExclusivo(new Usuario("Anon", "1234"), "Batoi", LocalDateTime.of(2024, 5,20,15,30),90, 80, 200, 15));
-        this.add(new ViajeExclusivo(new Usuario("Jordi", "1234"), "Raro", LocalDateTime.of(2024, 5,2,15,30),90, 5, 1, 5));
+        this.add(new ViajeExclusivo(new Usuario("Anon", "1234"), "Raro", LocalDateTime.of(2024, 5,2,15,30),90, 5, 1, 5));
         
         
     }
