@@ -122,7 +122,7 @@ public class ViajesController {
 
     public void cancelarViaje(int codigo) throws ViajeNoValidoException {
         List<Viaje> viajes = getViajesCancelables();
-        Viaje v = new Viaje(codigo);
+        Viaje v = getViaje(codigo);
         if (isValido(codigo) && viajes.remove(v)) {
         gestor.cancel(v);
         GestorIO.print("El viaje se ha cancelado correctamente.");

@@ -112,6 +112,8 @@ public class Menu {
                     } else {
                         throw new ViajeNoValidoException();
                     }
+                }else{
+                    GestorIO.print("No hay Reservas en Viajes Modificables.");
                 }
             }
             case OPCION_CANCELAR_RESERVA -> {
@@ -127,6 +129,8 @@ public class Menu {
                     } else {
                         throw new ReservaNoValidaException();
                     }
+                }else{
+                    GestorIO.print("No hay Reservas en Viajes Cancelables.");
                 }
             }
             case OPCION_BUSCAR_VIAJE_Y_ADD_RESERVA -> {
@@ -136,10 +140,14 @@ public class Menu {
                     if (GestorIO.confirmar("¿Quiere realizar una reserva?")) {
                         viajesController.buscarViaje(sitio);
                         int codigo = GestorIO.getInt("Introduce el código del viaje a seleccionar");
-                        reservasController.anyadirReserva(viajesController.getViaje(codigo), user);
+                        if (viajesController.isValido(codigo)) {
+                            reservasController.anyadirReserva(viajesController.getViaje(codigo), user);
+                        } else {
+                            throw new ViajeNoValidoException();
+                        }
                     }
                 }else{
-                    throw new ViajeNoValidoException();
+                    GestorIO.print("No se ha encontrado ningun Viaje a ese lugar.");
                 }
             }
         }

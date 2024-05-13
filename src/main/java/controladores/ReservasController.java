@@ -116,11 +116,13 @@ public class ReservasController {
         final int NUM_PLAZA_MIN = 1;
         ViajeFlexible v = (ViajeFlexible) reserva.getViaje();
         if (comprobarUsuario(reserva.getViaje(), user) && v.getOfertadas() >= NUM_PLAZA_MIN) {
-            int plazas = GestorIO.getInt("Introduzaca el numero de plazas a reserva", reserva.getPlazas(), v.getOfertadas());
+            int plazas = GestorIO.getInt("Introduzaca el numero de plazas a reserva", reserva.getPlazas()+1, v.getOfertadas());
             Reserva r = v.cambiarPlazasReserva(reserva, plazas);
             if (r != null) {
                 GestorIO.print("Reserva realizada con éxito. A continuación se mostrará el ticket de confirmación.");
-                (new TicketView(user, reserva.getViaje().getCodigo(), plazas)).visualizar();
+                gestor.remove(reserva);
+                gestor.add(r);
+                (new TicketView(user, r.getViaje().getCodigo(), plazas)).visualizar();
             } else {
                 throw new ReservaNoValidaException();
             }
