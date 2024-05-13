@@ -166,7 +166,7 @@ public class ViajesController {
         return v != null && !v.getCerrado() && !v.getCancelado() && (v instanceof ViajeFlexible || v instanceof ViajeCancelable);
     }
     
-    private boolean isValido(int codigo){
+    public boolean isValido(int codigo){
         Viaje v = getViaje(codigo);
         return v!=null && !v.getCerrado() && !v.getCancelado() && v.getPropietario() != null;        
     }
