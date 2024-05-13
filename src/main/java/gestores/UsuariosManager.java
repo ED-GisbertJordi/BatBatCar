@@ -37,6 +37,8 @@ public class UsuariosManager {
     public void init() {
         usuarios.add(new Usuario("Jordi", "1234"));
         usuarios.add(new Usuario("Anon", "1234"));
+        usuarios.add(new Usuario("Jean", "1234"));
+
     }
 
 }

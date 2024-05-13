@@ -85,7 +85,6 @@ public class ViajesController {
                 + FLEXIBLE + "- Viaje Flexible\n"
                 + "Seleccione el tipo de viaje");
         if (numeroTipoViaje < ESTANDAR || numeroTipoViaje > FLEXIBLE) {
-            TiposViajes tipo = (numeroTipoViaje == 1) ? TiposViajes.Estandar : (numeroTipoViaje == 2) ? TiposViajes.Cancelable : (numeroTipoViaje == 3) ? TiposViajes.Exclusivo : TiposViajes.Flexible;
 
             String ruta = GestorIO.getString("Introduzca la ruta a realizar (Ej: Alcoy-Alicante)");
             int duracion = GestorIO.getInt("Introduzca la duracion del viaje en minutos");
@@ -94,17 +93,17 @@ public class ViajesController {
             int plazasOfertadas = GestorIO.getInt("Introduzca la nuemro de plazas disponibles");
 
             Viaje nuevo = null;
-            switch (tipo) {
-                case Estandar -> {
+            switch (numeroTipoViaje) {
+                case ESTANDAR -> {
                     nuevo = new Viaje(propietario, ruta, duracion, plazasTotales, plazasOfertadas, precio);
                 }
-                case Cancelable -> {
+                case CANCELABLE -> {
                     nuevo = new ViajeCancelable(propietario, ruta, duracion, plazasTotales, plazasOfertadas, precio);
                 }
-                case Exclusivo -> {
+                case EXCLUSIVO -> {
                     nuevo = new ViajeExclusivo(propietario, ruta, duracion, plazasTotales, plazasOfertadas, precio);
                 }
-                case Flexible -> {
+                case FLEXIBLE -> {
                     nuevo = new ViajeFlexible(propietario, ruta, duracion, plazasTotales, plazasOfertadas, precio);
                 }
             }
