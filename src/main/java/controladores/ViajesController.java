@@ -80,50 +80,54 @@ public class ViajesController {
         final int CANCELABLE = 2;
         final int EXCLUSIVO = 3;
         final int FLEXIBLE = 4;
+        
+        final int MIN_PLAZAS = 1;
+        final int MIN_PRECIO = 1;
+        final int MIN_DURACION = 1;
+        
         int numeroTipoViaje = GestorIO.getInt(
                 ESTANDAR + "- Viaje Estánndar\n"
                 + CANCELABLE + "- Viaje Cancelable\n"
                 + EXCLUSIVO + "- Viaje Exclusivo\n"
                 + FLEXIBLE + "- Viaje Flexible\n"
                 + "Seleccione el tipo de viaje");
-        if (numeroTipoViaje < ESTANDAR || numeroTipoViaje > FLEXIBLE) {
-            throw new ViajeNoValidoException();
-         }
-        TiposViajes tipo = (numeroTipoViaje == ESTANDAR) ? TiposViajes.Estandar : (numeroTipoViaje == CANCELABLE) ? TiposViajes.Cancelable : (numeroTipoViaje == EXCLUSIVO) ? TiposViajes.Exclusivo : TiposViajes.Flexible;
 
         String ruta = GestorIO.getString("Introduzca la ruta a realizar (Ej: Alcoy-Alicante)");
-        int duracion = GestorIO.getInt("Introduzca la duracion del viaje en minutos");
-        double precio = GestorIO.getInt("Introduzca el precio de cada plaza");
-        int plazasTotales = GestorIO.getInt("Introduzca la nuemro de plazas");
-        int plazasOfertadas = GestorIO.getInt("Introduzca la nuemro de plazas disponibles");
+        int duracion = GestorIO.getInt("Introduzca la duracion del viaje en minutos", MIN_DURACION, Integer.MAX_VALUE);
+        double precio = GestorIO.getInt("Introduzca el precio de cada plaza", MIN_PRECIO, Integer.MAX_VALUE);
+        int plazasTotales = GestorIO.getInt("Introduzca la nuemro de plazas", MIN_PLAZAS , Integer.MAX_VALUE);
+        int plazasOfertadas = GestorIO.getInt("Introduzca la nuemro de plazas disponibles", MIN_PLAZAS , Integer.MAX_VALUE);
 
         Viaje nuevo = null;
-        switch (tipo) {
-            case Estandar -> {
+        switch (numeroTipoViaje) {
+            case ESTANDAR -> {
                 nuevo = new Viaje(propietario, ruta, duracion, plazasTotales, plazasOfertadas, precio);
             }
-            case Cancelable -> {
+            case CANCELABLE -> {
                 nuevo = new ViajeCancelable(propietario, ruta, duracion, plazasTotales, plazasOfertadas, precio);
             }
-            case Exclusivo -> {
+            case EXCLUSIVO -> {
                 nuevo = new ViajeExclusivo(propietario, ruta, duracion, plazasTotales, plazasOfertadas, precio);
             }
-            case Flexible -> {
+            case FLEXIBLE -> {
                 nuevo = new ViajeFlexible(propietario, ruta, duracion, plazasTotales, plazasOfertadas, precio);
+            }
+            default ->{
+                throw new ViajeNoValidoException();
             }
         }
         this.gestor.add(nuevo);
         GestorIO.print(nuevo + " añadido con éxito");
     }
 
-    public void cancelarViaje(int codigo) {
+    public void cancelarViaje(int codigo) throws ViajeNoValidoException {
         List<Viaje> viajes = getViajesCancelables();
         Viaje v = new Viaje(codigo);
         if (isValido(codigo) && viajes.remove(v)) {
         gestor.cancel(v);
         GestorIO.print("El viaje se ha cancelado correctamente.");
         } else {
-            GestorIO.print("El viaje no se ha podido cancelado, compruebe el código.");
+            throw new ViajeNoValidoException();
         }
     }
 
@@ -158,15 +162,15 @@ public class ViajesController {
 
     public boolean getModificable(int codigo) {
         Viaje v = getViaje(codigo);
-        return v != null && !v.getCerrado() && !v.getCancelado() && v instanceof ViajeFlexible;
+        return isValido(codigo) && v instanceof ViajeFlexible;
     }
 
     public boolean getCancelable(int codigo) {
         Viaje v = getViaje(codigo);
-        return v != null && !v.getCerrado() && !v.getCancelado() && (v instanceof ViajeFlexible || v instanceof ViajeCancelable);
+        return isValido(codigo) && (v instanceof ViajeFlexible || v instanceof ViajeCancelable);
     }
     
-    private boolean isValido(int codigo){
+    public boolean isValido(int codigo){
         Viaje v = getViaje(codigo);
         return v!=null && !v.getCerrado() && !v.getCancelado() && v.getPropietario() != null;        
     }

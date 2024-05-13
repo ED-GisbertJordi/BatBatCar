@@ -47,7 +47,7 @@ public class Menu {
             opcionSeleccionada = solicitarOpcion();
             try {
                 ejecutarOpcion(opcionSeleccionada);
-            } catch (UsuarioSinEstablecerException | ViajeNoValidoException e) {
+            } catch (UsuarioSinEstablecerException | ViajeNoValidoException | ReservaNoValidaException e) {
                 GestorIO.print(e.getMessage() + "\n");
             }
         } while (opcionSeleccionada != OPCION_SALIR);
@@ -78,7 +78,7 @@ public class Menu {
         this.reservasController = new ReservasController(user);
     }
 
-    private void ejecutarOpcion(int opcionSeleccionada) throws UsuarioSinEstablecerException, ViajeNoValidoException {
+    private void ejecutarOpcion(int opcionSeleccionada) throws UsuarioSinEstablecerException, ViajeNoValidoException, ReservaNoValidaException {
         if (user==null && opcionSeleccionada != OPCION_LOG && opcionSeleccionada != OPCION_LISTA_VIAJES) {
             throw new UsuarioSinEstablecerException();
         }
@@ -98,20 +98,20 @@ public class Menu {
             case OPCION_ADD_RESERVA -> {
                 viajesController.listarViajesReservables();
                 int codigo = GestorIO.getInt("Introduce el código del viaje a seleccionar");
-                reservasController.anyadirReserva(viajesController.getViaje(codigo), user);
+                if (viajesController.isValido(codigo)) {
+                    reservasController.anyadirReserva(viajesController.getViaje(codigo), user);
+                }else{
+                    throw new ViajeNoValidoException();
+                }
             }
             case OPCION_MOD_RESERVA -> {
                 reservasController.listarReservasModificables();
                 if (!reservasController.getReservasModificables().isEmpty()) {
                     int codigo = GestorIO.getInt("Introduce el código de la reserva a modificar");
-                    if (reservasController.getReserva(codigo) != null) {
-                        if (viajesController.getModificable(reservasController.getReserva(codigo).getViaje().getCodigo())) {
-                            reservasController.modificarReserva(reservasController.getReserva(codigo));
-                        } else {
-                            GestorIO.print("Error: El viaje no permite Cambios en las reservas.");
-                        }
+                    if (reservasController.isValido(codigo) && viajesController.getModificable(reservasController.getReserva(codigo).getViaje().getCodigo())) {
+                        reservasController.modificarReserva(reservasController.getReserva(codigo));
                     } else {
-                        GestorIO.print("El código no corresponde con un Viaje valido.");
+                        throw new ViajeNoValidoException();
                     }
                 }
             }
@@ -119,14 +119,14 @@ public class Menu {
                 reservasController.listarReservasCancelables();
                 if (!reservasController.getReservasCancelables().isEmpty()) {
                     int codigo = GestorIO.getInt("Introduce el código de la reserva a modificar");
-                    if (reservasController.getReserva(codigo) != null) {
+                    if (reservasController.isValido(codigo)) {
                         if (viajesController.getCancelable(reservasController.getReserva(codigo).getViaje().getCodigo())) {
                             reservasController.cancelarReserva(reservasController.getReserva(codigo));
                         } else {
-                            GestorIO.print("Error: El viaje no permite Cambios en las reservas.");
+                            throw new ViajeNoValidoException();
                         }
                     } else {
-                        GestorIO.print("El código no corresponde con un Viaje valido.");
+                        throw new ReservaNoValidaException();
                     }
                 }
             }

@@ -8,6 +8,8 @@ import entidades.Usuario;
 import entidades.Viaje;
 import entidades.tiposViajes.ViajeCancelable;
 import entidades.tiposViajes.ViajeFlexible;
+import excepciones.ReservaNoValidaException;
+import excepciones.ViajeNoValidoException;
 import gestores.ReservasManager;
 import views.GestorIO;
 import views.ListadoReservasView;
@@ -26,40 +28,25 @@ public class ReservasController {
         this.user = usuario;
     }
 
-    public void anyadirReserva(Viaje viaje, Usuario usuario) {
+    public void anyadirReserva(Viaje viaje, Usuario usuario) throws ReservaNoValidaException, ViajeNoValidoException {
         final int NUM_PLAZA_MIN = 1;
-        if (comprovaciones(viaje, usuario)) {
-            if (viaje.getOfertadas() >= NUM_PLAZA_MIN) {
-                int plazas = GestorIO.getInt("Introduzaca el numero de plazas a reserva", NUM_PLAZA_MIN, viaje.getOfertadas());
-                Reserva reserva = viaje.hacerReserva(usuario, plazas);
-                if (reserva != null) {
-                    this.gestor.add(reserva);
-                    GestorIO.print("Reserva realizada con éxito. A continuación se mostrará el ticket de confirmación.");
-                    (new TicketView(usuario, viaje.getCodigo(), plazas)).visualizar();
-                }
+        if (comprobarUsuario(viaje, usuario) && viaje.getOfertadas() >= NUM_PLAZA_MIN) {
+            int plazas = GestorIO.getInt("Introduzaca el numero de plazas a reserva", NUM_PLAZA_MIN, viaje.getOfertadas());
+            Reserva reserva = viaje.hacerReserva(usuario, plazas);
+            if (reserva != null) {
+                this.gestor.add(reserva);
+                GestorIO.print("Reserva realizada con éxito. A continuación se mostrará el ticket de confirmación.");
+                (new TicketView(usuario, viaje.getCodigo(), plazas)).visualizar();
             } else {
-                GestorIO.print("Error: No hay plazas disponiebles en ese Viaje.");
+                throw new ReservaNoValidaException();
             }
         } else {
-            GestorIO.print("Error: No se puede hacer la reserva, porque ya tiene una en este Viaje.");
+            throw new ViajeNoValidoException();
         }
     }
 
-    private boolean comprovaciones(Viaje viaje, Usuario usuario) {
-        if (viaje != null) {
-            if (!viaje.getCerrado() && !viaje.getCancelado()) {
-                if (!viaje.getPropietario().equals(usuario)) {
-                    return true;
-                } else {
-                    GestorIO.print("Error: No puedes hacer una reserva en un Viajes si eres tu el Propietario.");
-                }
-            } else {
-                GestorIO.print("Error: El Viaje esta Cerrado/Cancelado.");
-            }
-        } else {
-            GestorIO.print("El código no es valido.");
-        }
-        return false;
+    private boolean comprobarUsuario(Viaje viaje, Usuario usuario) {
+        return !viaje.getPropietario().equals(usuario);
     }
 
     private void printReservas(List<Reserva> lista) {
@@ -115,33 +102,41 @@ public class ReservasController {
         return null;
     }
 
-    public void modificarReserva(Reserva reserva) {
-        final int NUM_PLAZA_MIN = 1;
-        if (comprovaciones(reserva.getViaje(), user)) {
-            ViajeFlexible v = (ViajeFlexible) reserva.getViaje();
-            if (v.getOfertadas() >= NUM_PLAZA_MIN) {
-                int plazas = GestorIO.getInt("Introduzaca el numero de plazas a reserva", reserva.getPlazas(), v.getOfertadas());
-                Reserva r = v.cambiarPlazasReserva(reserva, plazas);
-                if (r != null) {
-                    GestorIO.print("Reserva realizada con éxito. A continuación se mostrará el ticket de confirmación.");
-                    (new TicketView(user, reserva.getViaje().getCodigo(), plazas)).visualizar();
-                } else {
-                    GestorIO.print("No se ha podido realizar la modificación.");
-                }
-            } else {
-                GestorIO.print("Error: No hay plazas disponiebles en ese Viaje.");
+    public boolean isValido(int codigo) {
+        List<Reserva> reservas = gestor.findAll();
+        for (Reserva reserva : reservas) {
+            if (reserva.getCodigo() == codigo) {
+                return true;
             }
+        }
+        return false;
+    }
+
+    public void modificarReserva(Reserva reserva) throws ViajeNoValidoException, ReservaNoValidaException {
+        final int NUM_PLAZA_MIN = 1;
+        ViajeFlexible v = (ViajeFlexible) reserva.getViaje();
+        if (comprobarUsuario(reserva.getViaje(), user) && v.getOfertadas() >= NUM_PLAZA_MIN) {
+            int plazas = GestorIO.getInt("Introduzaca el numero de plazas a reserva", reserva.getPlazas(), v.getOfertadas());
+            Reserva r = v.cambiarPlazasReserva(reserva, plazas);
+            if (r != null) {
+                GestorIO.print("Reserva realizada con éxito. A continuación se mostrará el ticket de confirmación.");
+                (new TicketView(user, reserva.getViaje().getCodigo(), plazas)).visualizar();
+            } else {
+                throw new ReservaNoValidaException();
+            }
+        } else {
+            throw new ViajeNoValidoException();
         }
     }
 
-    public void cancelarReserva(Reserva reserva) {
-        if (comprovaciones(reserva.getViaje(), user)) {
+    public void cancelarReserva(Reserva reserva) throws ReservaNoValidaException {
+        if (comprobarUsuario(reserva.getViaje(), user)) {
             ViajeFlexible v = (ViajeFlexible) reserva.getViaje();
             v.cancelarReserva(reserva.getCodigo());
             gestor.remove(reserva);
-            GestorIO.print("Reserva del "+reserva.getViaje().toString()+" Cancelada con éxito.");
+            GestorIO.print("Reserva del " + reserva.getViaje().toString() + " Cancelada con éxito.");
         } else {
-            GestorIO.print("No se ha podido cacelar.");
+            throw new ReservaNoValidaException();
         }
 
     }
