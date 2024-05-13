@@ -28,7 +28,6 @@ public class Menu {
     private ReservasController reservasController;
     private int opcionSeleccionada;
     private Usuario user;
-    private boolean iniciado;
 
     public Menu() {
         this.viajesController = new ViajesController(null);
@@ -135,12 +134,12 @@ public class Menu {
                 viajesController.listarSitio(sitio);
                 if (!viajesController.buscarViaje(sitio).isEmpty()) {
                     if (GestorIO.confirmar("¿Quiere realizar una reserva?")) {
-                            viajesController.buscarViaje(sitio);
-                            int codigo = GestorIO.getInt("Introduce el código del viaje a seleccionar");
-                            reservasController.anyadirReserva(viajesController.getViaje(codigo), user);
+                        viajesController.buscarViaje(sitio);
+                        int codigo = GestorIO.getInt("Introduce el código del viaje a seleccionar");
+                        reservasController.anyadirReserva(viajesController.getViaje(codigo), user);
                     }
                 }else{
-                    GestorIO.print("Lo sentimos no hay viajes a ese sitio.");
+                    throw new ViajeNoValidoException();
                 }
             }
         }

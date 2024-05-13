@@ -132,14 +132,17 @@ public class ViajesController {
     }
 
     public List<Viaje> buscarViaje(String sitio) {
+        final int MIN_PLAZAS = 1;
         List<Viaje> viajes = gestor.findAll();
         List<Viaje> rutas = new ArrayList<>();
         for (Viaje viaje : viajes) {
             StringTokenizer tokenizer = new StringTokenizer(viaje.getRuta(), "-");
-            while (!viaje.getPropietario().equals(usuario) && tokenizer.hasMoreTokens()) {
-                String token = tokenizer.nextToken().toLowerCase();                
-                if (token.equals(sitio.toLowerCase())) {
-                    rutas.add(viaje);
+            if (isValido(viaje.getCodigo()) && !viaje.getPropietario().equals(usuario) && viaje.getOfertadas() >= MIN_PLAZAS) {
+                while (tokenizer.hasMoreTokens()) {
+                    String token = tokenizer.nextToken().toLowerCase();                
+                    if (token.equals(sitio.toLowerCase())) {
+                        rutas.add(viaje);
+                    }
                 }
             }
         }
