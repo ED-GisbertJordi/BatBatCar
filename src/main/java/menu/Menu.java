@@ -79,8 +79,10 @@ public class Menu {
         switch (opcionSeleccionada) {
             case OPCION_LOG -> {
                 user = usuariosController.log();
-                init(user);
-                iniciado = true;
+                if (user != null) {
+                    init(user);
+                        iniciado = true;
+                }
                 if (!iniciado) {
                     opcionSeleccionada = OPCION_SALIR;
                 }

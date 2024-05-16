@@ -54,9 +54,7 @@ public class ListadoViajesView {
         Iterator i = viajes.iterator();
         while (i.hasNext()) {
             Viaje next =  (Viaje) i.next();
-            
             tabla.addRow(next.getCodigo(), null, next.getRuta(), next.getPrecio(), next.getPropietario(), next.getTipo(), next.getOfertadas(), (next.getCancelado()? "Si" : "No"));
-
         }
         /*
         tabla.addRow(1, null, "Barcelona-Alicante", 45, "roberto1979", "Estándar", 3, "No");
